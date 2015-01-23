@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<title>HammerJS</title>
+<style>
+body {
+    background: url('images/bg-medium.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100%;
+    text-align: center;
+    overflow: auto;
+	font-family: 'Open Sans';
+	color: #000;
+	text-shadow: 0px 0px 40px #FFFFFF;
+}
+
+.container {
+    margin: 0 auto;
+}
+.images {
+    width: 300px;
+    height: 300px;
+    margin: 10px;
+    background-color: #FCAD32;
+    background-size: cover;
+    box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.6);
+    cursor: pointer;
+    display: block;
+    float: left;
+	position: relative;
+	z-index: 1;
+}
+#img_1 {
+    background: url('images/img1.jpg');
+    background-size: cover;
+}
+#img_2 {
+    background: url('images/img2.jpg');
+    background-size: cover;
+}
+#img_3 {
+    background: url('images/img3.jpg');
+    background-size: cover;
+}
+@media (min-width: 1921px) {
+    .images {
+        width: 620px;        
+        height: 349px;
+    }
+}
+@media (max-width: 1920px) {
+    .images {
+        width: 515px;        
+        height: 290px;
+    }
+}
+@media (max-width: 1600px) {
+    .images {
+        width: 490px;        
+        height: 276px;
+    }
+}
+@media (max-width: 768px) {
+    .images {
+        width: 480px;        
+        height: 270px;
+    }
+}
+@media (max-width: 480px) {
+    .images {
+        width: 420px;        
+        height: 236px;
+    }
+}
+@media (max-width: 430px) {   
+    .images {
+        width: 340px;        
+        height: 191px;
+    }
+}
+</style>
+</head>
+<body>
+	<h1>Kuvagalleria kosketusnäytöille</h1>
+	<p>Kuvia voi liikuttaa, pyörittää ja skaalata. Klikkaaminen asettaa kuvan alkuperäiseen tilaan. Lähdekoodin näkee esimerkiksi komennolla CTRL + U</p>
+    <div class='container'>
+	<div id="img_1" class="images"></div>
+	<div id="img_2" class="images"></div>
+	<div id="img_3" class="images"></div>
+    </div>
+<script src="js/hammer.min.js"></script>	
+<script>
+
+	// Globaali Z-indeksin arvo, määrittelee päällimmäisen kuvan tason
+    var globalZ = 10;
+	
+	// Lisää elementille Hammer.js kosketuspahtumat, sekä käsittelee tapahtumat oliopohjaisesti
+    var doHammer = function(elmnt) {
+	
+		// Olion ominaisuudet: sijainti, skaalaus, kulma, z-indeksi, sekä näiden viimeisimmät arvot
+		// border määrittelee elementin reunojen korostuksen kun siihen kohdistuu jokin tapahtuma
+        var transform = {x:0, y:0, s:1, a:0, z:1, lastX:0, lastY:0, lastS: 0, lastA: 0, border: false}; 
+		
+		// Tapahtuman alkuvaiheessa asetetaan elementti päällimmäiseksi ja korostetaan sen reunat
+        function startEvent(ev) {
+            transform.z *= 20;
+			transform.border = true;
+            update(ev.target); // Elementin päivitys
+        };
+		// Elementin liikkuminen, haetaan sijainti tallennetuista last-muuttujista ja lisätään uudet arvot
+        function panElement(ev) {
+            transform.x = ev.deltaX + transform.lastX;
+            transform.y = ev.deltaY + transform.lastY;
+            update(ev.target);
+        };
+		// Elementin skaalaaminen ja pyörittäminen
+        function pinchRotateElement(ev) {
+            transform.s = ev.scale + transform.lastS;
+            transform.a = ev.rotation + transform.lastA;
+			update(ev.target);
+        };
+		// Elementin klikkaus/näpäytys, nollataan elementin sijainti
+        function tapElement(ev) {
+            reset(ev.target);
+        };
+		// Tapahtuman loppuvaiheessa tallennetaan nykyiset sijainnit ja muuttujat talteen, otetaan reunojen
+		// korostus pois ja päivitetään vielä elementti
+        function endEvent(ev) {
+			globalZ++;
+			transform.z = globalZ;
+            transform.lastX = transform.x;
+            transform.lastY = transform.y;
+            transform.lastS = transform.s;
+            transform.lastA = transform.a;
+			transform.border = false;		
+			update(ev.target);
+        };
+		// Hammer.js olion alustus ja konfigurointi
+        function initHammer(element) {
+		
+			// Lisätään tunnistukset
+            var singleTap = new Hammer.Tap({ event: 'singletap' }); // Yhden tap-tapahtuman tunnistaminen
+            var pinch = new Hammer.Pinch({ threshold: 0 });	// Skaalauksen vastusarvo asetetaan nollaksi
+            var rotate = new Hammer.Rotate({ threshold: 0 }); // Pyörittämisen vastusarvo asetaan nollaksi
+            var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }); // kaikki suunnat pan-tapahtumaan
+			
+			// Luodaan olio, asetetaan omat tunnistukset siihen
+            var hammertime = new Hammer.Manager(element);
+            hammertime.add([singleTap, pinch, rotate, pan]);
+            pinch.recognizeWith(rotate);
+            
+			// Määritellään tapahtumista suoritettavat funktiot
+            hammertime.on('panmove', panElement)
+                    .on('pinchmove rotatemove', pinchRotateElement)
+                    .on('singletap', tapElement)
+                    .on('panend pinchend rotateend', endEvent)
+					.on('panstart pinchstart rotatestart', startEvent);
+            
+        };
+		// Elementin päivittäminen
+        function update(el) {
+			// Käytetään CSS3:n transform ominaisuutta
+            var value = [
+                'translate3d(' + transform.x + 'px, ' + transform.y + 'px, 0)',
+                'scale(' + transform.s + ', ' + transform.s + ')',
+                'rotate3d('+ 0 +','+ 0 +','+ 1 +','+  transform.a + 'deg)'					
+            ];
+            value = value.join(" ");
+			
+			// Tarkistetaan korostetaanko reunat
+			if (transform.border) {
+				el.style.boxShadow = "0px 0px 8px 4px rgba(255,134,0,0.6)";
+			} else {
+				el.style.boxShadow = "0px 0px 8px 2px rgba(0,0,0,0.6)";
+			}
+			// Asetetaan transform-arvot eri selaintyypeille (mozilla, webkit ja yleinen html5 perusarvo)
+            el.style.webkitTransform = value;
+            el.style.mozTransform = value;
+            el.style.transform = value;
+			el.style.zIndex = transform.z; // Päivitetään z-indeksi
+        }
+		// Alustetaan elementtti
+		function reset(el) {
+			transform = {x:0, y:0, s:1, a:0, z:1, lastX:0, lastY:0, lastS: 0, lastA: 0};
+			update(el);
+		}
+		// Kutsutaan olion alustusfunktiota sen luontivaiheessa
+        initHammer(elmnt);
+        
+    }
+// Luodaan kaikille kuville doHammer-oliot sivun lataamisen jälkeen	
+document.addEventListener("DOMContentLoaded", function(event) { 
+    var e = document.querySelectorAll('.images');
+    for (var i = 0; i < e.length; i++) {
+        doHammer(e[i]);
+    }
+});    
+
+
+</script>
+</body>
+</html>

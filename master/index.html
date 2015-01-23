@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html lang="fi">
+    <head>
+        <meta charset="utf-8">
+        <title>Hammer.js JavaScript kirjasto</title>
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="msapplication-tap-highlight" content="no" />
+        <link rel="stylesheet" href="css/bootstrap.css" media="screen">
+        <link rel="stylesheet" href="css/bootswatch.min.css">
+		<link rel="stylesheet" href="css/prism.css" />
+        <!-- Jos käytössä on vanhempi selain, ladataan HTML5 shim ja respond.js kirjastot käytettävyyden tueksi -->
+        <!--[if lt IE 9]>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.js"></script>
+        <![endif]-->
+		
+        <style>
+		#esittely {
+			padding-top: 60px;
+		}
+		#perusteet {
+			padding-top: 60px;
+		}		
+		#esimerkkeja {
+			padding-top: 60px;
+		}
+        #hammertesti {
+            height: 400px; 
+            width: 100%;
+            position: relative;
+        }
+        #move_block_0 {
+            width: 480px;			
+            height: 360px;
+            background: url('images/img.jpg');
+            background-size: cover;
+            box-shadow: 0px 0px 8px 4px rgba(0,0,0,0.6);
+            cursor: pointer;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        #hammer_swipe {
+            width: 100%;
+            height: 53px;
+            background-color: #CACACA;
+            border-radius: 15px;
+            box-shadow: inset 1px 2px 7px rgba(0,0,0,0.2);
+            margin: 30px 0px 20px 0px;
+            text-align: center;
+            cursor: pointer;
+        }
+        #hammer_swipe span {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            color: #FFF;
+            font-size: 1.4em;
+            line-height: 2.5;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;         
+        }
+        </style>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a href="" class="navbar-brand">Hammer.js</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar-main">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#esittely">Esittely</a></li>
+                        <li><a href="#perusteet">Perusteet</a></li>
+                        <li><a href="#esimerkkeja">Esimerkkejä</a></li>            
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="page-header center">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Hammer.js</h1>
+                        <p class="lead">Javascript kirjasto</p>
+                    </div>
+                </div>
+            </div>
+            <div id="esittely" class="col-md-12 page-header">
+                <h2>Esittely</h2>
+                <div class="jumbotron">
+                    <p class="lead">Hammer.js on JavaScript lisäkirjasto, jonka avulla voidaan hallita
+                        erilaisia kosketustapahtumia. Tällä sivulla tarkastellaan lyhyesti kirjaston ominaisuuksia
+                        ja toimintaa, sekä kaikkea mitä kirjastolla on mahdollista saavuttaa. 
+                        Pääasiallisena esimerkkinä toteutetaan Hammer.js:n avulla pieni valokuvagalleria, joka reagoi useimpiin kosketustapahtumiin.
+						Sivujen esimerkkejä on tarkoitus käyttää kosketusnäytöllisillä laitteilla, mutta raahaustapahtumat toimivat hiirelläkin.
+                    </p>
+
+                    </p>			
+                    <p>Tuetut kosketustapahtumat:</p>
+                    <ul>
+                        <li>Swipe (liu'utus) ylös, alas ja sivuille</li>
+                        <li>Multitouch (Monen pisteen kosketus)</li>
+                        <li>Pan (Raahaus)</li>
+                        <li>Pinch (Nipistys)</li>
+                        <li>Rotate (Kiertäminen)</li>
+                        <li>Tap (Näpäytys)</li>
+                    </ul>
+                    <p>Sivun toiminnassa on hyödynnetty itse Hammer.js:n lisäksi seuraavia tekniikoita:</p>
+                    <ul class="list-unstyled">
+                        <li><a href="http://getbootstrap.com">Bootstrap 3.0</a></li>
+                        <li><a href="http://www.jquery.com">JQuery 1.10.2</a></li>
+                    </ul>
+                    <p>Linkkejä</p>
+                    <ul class="list-unstyled">
+                        <li><a href="http://hammerjs.github.io/">Hammer.js kotisivut</a></li>
+                        <li><a href="http://hammerjs.github.io/api">API referenssi</a></li>
+                    </ul>			
+                </div>
+            </div>
+
+            <div id="perusteet" class="col-md-12 page-header">
+                <h2>Perusteet</h2>
+                <div class="jumbotron">
+                    <p class="lead">Hammer JS saatetaan toimintakuntoon sivustolla lataamalla sen
+                        JavaScript-kirjasto HammerJS:n verkkosivuilta (joko <a href="">hammer.js</a> tai minifioitu <a href="">hammer.min.js</a>).</p>
+                    <p>Kirjasto asennetaan lisäämällä html-sivun script osioon viittaus hammer.js tai hammer.min.js tiedostoon:</p>
+                    <pre><code class="language-javascript">&#x3C;script type=&#x22;text/javascript&#x22; src=&#x22;js/hammer.min.js&#x22;&#x3E;&#x3C;/script&#x3E;</code></pre>
+                    <p>Tämän jälkeen luodaan uusi Hammer-olio seuraavasti:</p>
+<pre><code class="language-javascript">var el = document.getElementById('kohde_elementin_id');
+var hammertime = new Hammer(el);</code></pre>
+                    <p>Tämä alustaa Hammer olion oletusasetuksille, asetuksia voidaan muuttaa lisäämällä kutsujaan elementti-parametrin lisäksi asetusmuuttuja. 
+                        Tästä esimerkkejä löytyy <a href="http://hammerjs.github.io/api/">API</a>:sta.</p>
+                    <p>Hammer on nyt aktivoituna, mutta se pitää lisäksi asettaa "kuuntelemaan" käyttäjän kosketustapahtumia. Tämä tehdään asettamalla muuttujaan
+                    tapahtumankuuntelija, jossa tulee valita mitä kosketustapahtumaa lähdetään "kuuntelemaan".</p>
+ <pre><code class="language-javascript">hammertime.on('pan', function(tapahtuma) {
+  console.log(tapahtuma);
+}</code></pre>
+                    <p>Yllä oleva koodi asettaa Hammer.js:n kuuntelemaan 'pan' eli raahaustapahtumaa, jonka ilmetessä tulostetaan selaimen konsoliin tapahtuman tiedot.</p>
+                    <p>Oletuksena käytössä ovat tap, doubletap, press, vaakasuuntainen pan ja swipe. Nipistys- ja pyöritystunnistimet voidaan lisätä seuraavasti:</p>
+<pre><code class="language-javascript">hammertime.get('pinch').set({ enable: true });
+hammertime.get('rotate').set({ enable: true });</code></pre>
+                    <p>Vanhemmissa selaimissa, jotka eivät tue touch-action-ominaisuutta, on myös hyvä asettaa metatietoihin käyttäjän zoomausmahdollisuus pois, jotta Hammer.js saa
+                    täyden kontrollin kosketustapahtumista:</p>
+                    <pre><code class="language-javascript">&#x3C;meta name=&#x22;viewport&#x22; content=&#x22;user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1&#x22;&#x3E;</code></pre>
+                </div>
+            </div>
+            <div id="esimerkkeja" class="col-md-12 page-header">
+                <h2>Esimerkkejä</h2>
+                <div class="jumbotron">
+                    <p class="lead">Hammer.js:llä voidaan tunnistaa erilaiset kosketustapahtumat, mutta niistä aiheutuvat toimenpiteet tehdään suurimmaksi osaksi ilman tätä lisäkirjastoa.
+                        Esimerkeissä käytetään pääosin JavaScriptiä, mutta myös <a href="">jQuery</a>-kirjastoa apuna.</p>
+                    <h3>Esim 1. Liu'utus (Swipe) -tapahtumien tunnistaminen</h3>
+                    <p>Hammer.js lukee kohde-elementin raahausliikkeitä erikseen oikealle ja vasemmalle sekä 'tap'-tapahtumaa, joista jokaisesta seuraa elementin taustan värin vaihtuminen.</p>
+                    <p>Lisäksi kohde-elementin sisällä oleva teksti asetetaan liikkumaan jQuery:n animate() funktiolla liikkeen pituisen matkan vaakasuunnassa (deltaX).</p>
+                    <div id="hammer_swipe"><span>Liu'uta oikealle tai vasemmalle</span></div>
+<pre><code class="language-javascript">
+&#x3C;div id=&#x22;hammer_swipe&#x22;&#x3E;&#x3C;span&#x3E;Liu'uta oikealle tai vasemmalle&#x3C;/span&#x3E;&#x3C;/div&#x3E;
+&#x3C;script&#x3E;
+var hammer_esim1 = new Hammer(document.getElementById('hammer_swipe'));<br>hammer_esim1.on('panleft panright tap press click', function(e) {
+ switch(e.type) {
+  case 'panleft':
+    $(e.target).parent().find('span:first').animate({marginLeft: e.deltaX +"px"},10);
+    $(e.target).closest('div').css({'background-color': 'rgb(54, 213, 0)'});
+  break;
+  case 'panright':
+    $(e.target).parent().find('span:first').animate({marginLeft: e.deltaX + "px"},10);
+    $(e.target).closest('div').css({'background-color': 'skyblue'});
+  break;
+  case 'tap':
+    $(e.target).closest('div').css({'background-color': '#CACACA'});
+  break;                         
+ }
+});
+hammer_esim1.on('panend tapend pressend swipeend', function(e) {
+  $(e.target).parent().find('span').animate({marginLeft: "0px"},100);
+});
+&#x3C;/script&#x3E;
+</code>
+</pre>
+                </div>                
+                <div class="jumbotron">
+                    <h3>Esim 2. Kuvan liikuttaminen, pyörittäminen ja skaalaaminen</h3>
+                    <p>Hammer.js asetetaan lukemaan raahaus-, pyöritys-, nipistys- ja näpäytyseleitä, jotka konfiguroidaan aluksi Hammer.Manager-olion avulla.</p>
+                    <p>Jokaisen tapahtuman jälkeen (end) kohde-elementti piirretään uudestaan CSS:n transform-funktioiden avulla. Lisäksi edellinen sijainti tallennetaan muuttujiin, 
+                    jotta liike jatkuu kosketuksen jälkeen samasta paikasta.</p>
+                    <div id="hammertesti">
+                        <div id="move_block_0"></div>
+                    </div>
+                    <pre><code class="language-javascript">
+&#x3C;div id=&#x22move_block_0&#x22&#x3E;&#x3C;/div&#x3E;					
+&#x3C;script&#x3E;
+// Hammer.js:n alustaminen
+
+var el = document.getElementById('move_block_0');
+var hammertime = new Hammer.Manager(el);
+
+// Kosketustapahtumien alustaminen ja muokkaaminen
+
+var singleTap = new Hammer.Tap({ event: 'singletap' });
+var pinch = new Hammer.Pinch({ threshold: 0 });
+var rotate = new Hammer.Rotate({ threshold: 0 });
+var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 })
+
+// Lisätään tapahtumat kuunneltavien listalle
+
+hammertime.add([singleTap, pinch, rotate, pan]);
+pinch.recognizeWith(rotate);
+
+// Muuttujien alustus
+
+var X = 0, Y = 0, V = 1, Angle = 0;
+var lastX = 0, lastY = 0, lastV = 0, lastAngle = 0;
+var SKAALAUS_KERROIN = 0.1;
+var X_3D = 0, Y_3D = 0, Z_3D = 1;
+
+
+// Kosketustapahtumat
+
+hammertime.on('panstart panmove', function(ev) {			
+  X = ev.deltaX + lastX;
+  Y = ev.deltaY + lastY;
+  updateElement();		
+});			
+hammertime.on('pinchstart pinchmove rotatestart rotatemove', function(ev) {
+  V = ev.scale + lastV;
+  Angle = ev.rotation + lastAngle;
+  updateElement();
+});
+hammertime.on('singletap', function(ev) {
+  resetElement();
+});
+hammertime.on('panend pinchend rotateend', function(ev) {
+  lastX = X;
+  lastY = Y;
+  lastV = V * SKAALAUS_KERROIN;
+  lastAngle = Angle;
+});	
+
+// Apufunktiot
+
+function resetElement() {
+  X = Y = lastV = lastX = lastY = Angle = 0;
+  V = 1;
+  updateElement();
+}
+function updateElement() {
+  var value = [
+    'translate3d(' + X + 'px, ' + Y + 'px, 0)',
+    'scale(' + V + ', ' + V + ')',
+    'rotate3d('+ X_3D +','+ Y_3D +','+ Z_3D +','+  Angle + 'deg)'					
+  ];
+  value = value.join(" ");
+  el.style.webkitTransform = value;
+  el.style.mozTransform = value;
+  el.style.transform = value;					
+}
+&#x3C;/script&#x3E;
+</code>				
+</pre>
+                </div>
+                <div class="jumbotron">
+                    <h3>Esim 3. Useiden kuvien kuvagalleria</h3>
+                    <p>Esimerkki toimii kokonaan uudessa selainikkunassa ja on responsiivinen <br/><a target="_blank" href="kuva.html">Kuvagalleria</a></p>
+                </div>                
+            </div>
+        </div>
+        <div class="footer">
+            <div class="container">
+                <div class="row-fluid">
+                    <ul class="list-unstyled">
+                        <li class="text-muted pull-left">&copy; Ville Perälä</li>	
+                        <li class="pull-right"><a href="#top">Takaisin alkuun</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+		<script src="js/prism.js"></script>
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/hammer.min.js"></script>
+        
+        <script>
+            $(function() {
+		
+                
+		var hammer_esim1 = new Hammer(document.getElementById('hammer_swipe'));  
+                
+                hammer_esim1.on('panleft panright tap press click', function(e) {
+                    switch(e.type) {
+                        case 'panleft':
+                            $(e.target).parent().find('span:first').animate({marginLeft: e.deltaX +"px"},1);
+                            $(e.target).closest('div').css({'background-color': 'rgb(54, 213, 0)'});
+                            break;
+                        case 'panright':
+                            $(e.target).parent().find('span:first').animate({marginLeft: e.deltaX + "px"},1);
+                            $(e.target).closest('div').css({'background-color': 'skyblue'});
+                            break;
+                        case 'tap':
+                            $(e.target).closest('div').css({'background-color': '#CACACA'});
+                            break;                         
+                    }
+                });
+                hammer_esim1.on('panend tapend pressend swipeend', function(e) {
+                    $(e.target).parent().find('span').animate({marginLeft: "0px"},100);
+                });                
+                
+
+                // Hammer.js:n alustaminen
+
+                var el = document.getElementById('move_block_0');
+                var hammertime = new Hammer.Manager(el);
+
+                // Kosketustapahtumien alustaminen ja muokkaaminen
+
+                var singleTap = new Hammer.Tap({ event: 'singletap' });
+                var pinch = new Hammer.Pinch({ threshold: 0 });
+                var rotate = new Hammer.Rotate({ threshold: 0 });
+                var pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 })
+
+                // Lisätään tapahtumat kuunneltavien listalle
+
+                hammertime.add([singleTap, pinch, rotate, pan]);
+                pinch.recognizeWith(rotate);
+
+                // Muuttujien alustus
+
+                var X = 0, Y = 0, V = 1, Angle = 0;
+                var lastX = 0, lastY = 0, lastV = 0, lastAngle = 0;
+                var SKAALAUS_KERROIN = 0.1;
+                var X_3D = 0, Y_3D = 0, Z_3D = 1;
+
+
+                // Kosketustapahtumat
+
+                hammertime.on('panstart panmove', function(ev) {			
+                        X = ev.deltaX + lastX;
+                        Y = ev.deltaY + lastY;
+                        updateElement();		
+                });			
+                hammertime.on('pinchstart pinchmove rotatestart rotatemove', function(ev) {
+                        V = ev.scale + lastV;
+                        Angle = ev.rotation + lastAngle;
+                        updateElement();
+                });
+                hammertime.on('singletap', function(ev) {
+                        resetElement();
+                });
+                hammertime.on('panend pinchend rotateend', function(ev) {
+                        lastX = X;
+                        lastY = Y;
+                        lastV = V * SKAALAUS_KERROIN;
+                        lastAngle = Angle;
+                });	
+
+                // Apufunktiot
+
+                function resetElement() {
+                        X = Y = lastV = lastX = lastY = Angle = 0;
+                        V = 1;
+                        updateElement();
+                }
+                function updateElement() {
+                        var value = [
+                                'translate3d(' + X + 'px, ' + Y + 'px, 0)',
+                                'scale(' + V + ', ' + V + ')',
+                                'rotate3d('+ X_3D +','+ Y_3D +','+ Z_3D +','+  Angle + 'deg)'					
+                        ];
+                        value = value.join(" ");
+                        el.style.webkitTransform = value;
+                        el.style.mozTransform = value;
+                        el.style.transform = value;					
+                }
+            });
+
+        </script>
+    </body>
+</html>
